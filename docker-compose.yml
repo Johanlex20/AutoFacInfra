@@ -1,0 +1,52 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: autoFac_mysql
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+    ports:
+      - "3310:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5  
+
+  backend:
+    build: ./AutoFacApi
+    container_name: autoFac_backend
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8090:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # Sobrescribimos el host para que Spring Boot use el contenedor MySQL
+      - DB_HOST=autoFac_mysql
+      - DB_PORT=3306
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+
+  frontend:
+    build: ./AutoFac
+    container_name: autoFac_frontend
+    restart: always
+    ports:
+      - "4210:80"
+    depends_on:
+      - backend 
+
+volumes:
+  mysql_data:

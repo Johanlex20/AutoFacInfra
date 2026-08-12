@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-AutoFacApiApplication<AutoFacApi>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.AutoFacApi.AutoFacApiApplication",
+            "projectName": "AutoFacApi",
+            "args": ""
+        }
+    ]
+}
