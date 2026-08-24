@@ -28,6 +28,8 @@ services:
       - .env
     ports:
       - "8090:8080"
+    volumes:
+      - uploads_data:/app/uploads  
     depends_on:
       mysql:
         condition: service_healthy
@@ -38,6 +40,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
+      - UPLOAD_DIR=/app/uploads
 
   frontend:
     build: ./AutoFac
@@ -50,3 +53,4 @@ services:
 
 volumes:
   mysql_data:
+  uploads_data:
