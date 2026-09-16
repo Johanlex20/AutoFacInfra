@@ -29,7 +29,8 @@ services:
     ports:
       - "8090:8080"
     volumes:
-      - uploads_data:/app/uploads  
+      - uploads_data:/app/uploads
+      - chrome_profile_data:/app/chrome-profile-siigo
     depends_on:
       mysql:
         condition: service_healthy
@@ -54,3 +55,4 @@ services:
 volumes:
   mysql_data:
   uploads_data:
+  chrome_profile_data:
