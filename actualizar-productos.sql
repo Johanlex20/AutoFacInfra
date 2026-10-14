@@ -26,9 +26,13 @@ UPDATE producto SET imagen_url = 'assets/img/productos/desbluecuat.jpg'  WHERE n
 UPDATE producto SET imagen_url = 'assets/img/productos/alcohol-70.jpg'   WHERE nombre = 'ALCOHOL 70%' AND presentacion = 'Garrafa 20 L';
 UPDATE producto SET imagen_url = 'assets/img/productos/bl-40.jpg'        WHERE nombre = 'BL-40'       AND presentacion = 'Garrafa 20 L';
 
--- 3) Galon de 4 L: una fila nueva por cada etiqueta de galon, copiando categoria y descripcion de la garrafa
-INSERT INTO producto (nombre, categoria, descripcion, presentacion, precio, imagen_url)
-SELECT g.nombre, g.categoria, g.descripcion, 'Galón 4 L', 0, CONCAT('assets/img/productos/', v.archivo)
+-- 3) Galon de 4 L: una fila nueva por cada etiqueta de galon, copiando categoria y descripcion de la garrafa.
+-- La columna id no es autoincremental (Hibernate usa la tabla producto_seq), asi que el id se asigna aqui:
+-- se continua desde el id mas alto que exista.
+SET @base := (SELECT COALESCE(MAX(id), 0) FROM producto);
+
+INSERT INTO producto (id, nombre, categoria, descripcion, presentacion, precio, imagen_url)
+SELECT @base + ROW_NUMBER() OVER (ORDER BY g.id), g.nombre, g.categoria, g.descripcion, 'Galón 4 L', 0, CONCAT('assets/img/productos/', v.archivo)
 FROM producto g
 JOIN (
     SELECT 'D-20'        AS nombre, 'd-20-4l.jpg'        AS archivo UNION ALL
@@ -44,5 +48,9 @@ WHERE g.presentacion = 'Garrafa 20 L'
   AND NOT EXISTS (
       SELECT 1 FROM producto x WHERE x.nombre = g.nombre AND x.presentacion = 'Galón 4 L'
   );
+
+-- 4) Hibernate reparte los ids nuevos desde producto_seq: se sube por encima de los ids que se acaban de usar
+--    para que un producto creado desde el dashboard no choque con ellos (reiniciar el backend despues).
+UPDATE producto_seq SET next_val = GREATEST(next_val, (SELECT MAX(id) FROM producto) + 51);
 
 SELECT id, nombre, presentacion, precio, imagen_url FROM producto ORDER BY nombre, presentacion;
