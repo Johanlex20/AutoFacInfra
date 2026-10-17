@@ -1,0 +1,6 @@
+[submodule "AutoFac"]
+	path = AutoFac
+	url = https://github.com/Johanlex20/AutoFac.git
+[submodule "AutoFacApi"]
+	path = AutoFacApi
+	url = https://github.com/Johanlex20/AutoFacApi.git

@@ -150,7 +150,11 @@ AutoFacSigo/
 └── docs/img/           # Capturas de este README
 ```
 
-> `AutoFac` y `AutoFacApi` son repositorios independientes; este repositorio (`AutoFacInfra`) los orquesta con Docker Compose.
+> `AutoFac` y `AutoFacApi` son repositorios independientes, incluidos aquí como **submódulos de Git**; este repositorio (`AutoFacInfra`) los orquesta con Docker Compose.
+> Si clonaste sin `--recurse-submodules`, ejecuta `git submodule update --init`. Para traer lo último de cada uno: `git submodule update --remote`.
+
+- 🅰️ Frontend: [Johanlex20/AutoFac](https://github.com/Johanlex20/AutoFac)
+- 🍃 Backend: [Johanlex20/AutoFacApi](https://github.com/Johanlex20/AutoFacApi)
 
 ---
 
@@ -176,7 +180,9 @@ AutoFacSigo/
 ### Opción A · Docker (recomendada)
 
 ```bash
-
+# 1. Clonar este repositorio junto con el frontend y el backend (submódulos)
+git clone --recurse-submodules https://github.com/Johanlex20/AutoFacInfra.git
+cd AutoFacInfra
 
 # 2. Crear el archivo de entorno (ver tabla de variables)
 cp .env.example .env   # edita los valores
